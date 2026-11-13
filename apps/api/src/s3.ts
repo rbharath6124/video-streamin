@@ -4,6 +4,8 @@ import { env } from './env.js';
 const s3Config = {
   region: env.S3_REGION,
   forcePathStyle: env.S3_FORCE_PATH_STYLE,
+  // Presigned browser uploads have no body to checksum until the browser sends it.
+  requestChecksumCalculation: 'WHEN_REQUIRED' as const,
   credentials: {
     accessKeyId: env.S3_ACCESS_KEY_ID,
     secretAccessKey: env.S3_SECRET_ACCESS_KEY

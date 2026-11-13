@@ -123,7 +123,9 @@ COPY --from=build /app/apps/dashboard/dist apps/dashboard/dist
 # Service definitions, boot hook, helper scripts, backup tooling
 COPY docker/rootfs/ /
 COPY scripts/hovod-backup scripts/hovod-restore /usr/local/bin/
-RUN chmod 755 /usr/local/bin/hovod-backup /usr/local/bin/hovod-restore /usr/local/bin/hovod-healthcheck \
+RUN find /etc/hovod /etc/s6-overlay/scripts /usr/local/lib/hovod -type f -exec sed -i 's/\r$//' {} + \
+ && find /usr/local/bin -maxdepth 1 -type f -name 'hovod-*' -exec sed -i 's/\r$//' {} + \
+ && chmod 755 /usr/local/bin/hovod-backup /usr/local/bin/hovod-restore /usr/local/bin/hovod-healthcheck \
              /usr/local/bin/hovod-cli /usr/local/bin/hovod-reset-password \
              /etc/s6-overlay/scripts/hovod-stage2-hook /usr/local/lib/hovod/mariadb-init.sh \
              /etc/hovod/s6-rc.d/*/run /etc/hovod/s6-rc.d/*/data/check \
